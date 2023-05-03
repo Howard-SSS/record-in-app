@@ -12,26 +12,8 @@ class ViewController: UIViewController {
 
     var notes: [String] = []
     
-    var assetWriter: AVAssetWriter?
-    
-    var videoInput: AVAssetWriterInput?
-    
-    var audioInput: AVAssetWriterInput?
-    
-    var captureDirectionPath: String {
-        let ret = documentPath.appending("/capture")
-        if !FileManager.default.fileExists(atPath: ret) {
-            try? FileManager.default.createDirectory(atPath: ret, withIntermediateDirectories: true)
-        }
-        return ret
-    }
-    
-    var assetPath: String {
-        captureDirectionPath.appending("/test1.mp4")
-    }
-    
-    lazy var writeQueue: DispatchQueue = {
-       DispatchQueue(label: "output-queue")
+    lazy var bufferWriterTool: BufferWriterTool = {
+        .init()
     }()
     
     // MARK: - view
@@ -152,39 +134,17 @@ class ViewController: UIViewController {
             RPScreenRecorder.shared().isMicrophoneEnabled = true
             RPScreenRecorder.shared().startCapture { buffer, type, error in
                 if let error = error {
-                    weakSelf?.noteNewStatus(text: "\(error)")
+                    weakSelf?.noteNewStatus(text: "直播中错误\(error)")
                     return
                 }
-                weakSelf?.writeQueue.sync {
-                    if weakSelf?.assetWriter == nil {
-                        weakSelf?.prepareWriter(buffer: buffer)
-                    }
-                    if weakSelf?.assetWriter?.status == .unknown {
-                        let startTime = CMSampleBufferGetPresentationTimeStamp(buffer)
-                        weakSelf?.assetWriter?.startWriting()
-                        weakSelf?.assetWriter?.startSession(atSourceTime: startTime)
-                    } else if weakSelf?.assetWriter?.status == .failed {
-                        weakSelf?.noteNewStatus(text: "直播写入失效")
-                        return
-                    }
-                    
-                    if CMSampleBufferDataIsReady(buffer) == true {
-                        if type == .audioMic {
-                            if let audioInput = weakSelf?.audioInput, audioInput.isReadyForMoreMediaData {
-                                audioInput.append(buffer)
-                            }
-                        } else if type == .video {
-                            if let videoInput = weakSelf?.videoInput, videoInput.isReadyForMoreMediaData {
-                                videoInput.append(buffer)
-                            }
-                        }
-                    }
-                }
+                weakSelf?.bufferWriterTool.keepWrite(buffer: buffer, type: type)
+                
             } completionHandler: { error in
                 if let error = error {
                     weakSelf?.noteNewStatus(text: "\(error)")
                     return
                 }
+                weakSelf?.noteNewStatus(text: "开始直播完成")
             }
         } else {
             noteNewStatus(text: "结束直播")
@@ -194,16 +154,10 @@ class ViewController: UIViewController {
             }
             RPScreenRecorder.shared().stopCapture { error in
                 if let error = error {
-                    weakSelf?.noteNewStatus(text: "\(error)")
+                    weakSelf?.noteNewStatus(text: "结束直播错误\(error)")
                     return
                 }
-                weakSelf?.writeQueue.sync {
-                    weakSelf?.assetWriter?.finishWriting {
-                        if let assetPath = weakSelf?.assetPath {
-                            UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(assetPath)
-                        }
-                    }
-                }
+                weakSelf?.bufferWriterTool.finishWrite()
             }
         }
     }
@@ -231,42 +185,6 @@ extension ViewController {
         DispatchQueue.main.async {
             self.notes.append(text)
             self.tableView.insertRows(at: [.init(row: self.notes.count - 1, section: 0)], with: .bottom)
-        }
-    }
-    
-    func prepareWriter(buffer: CMSampleBuffer) {
-        if FileManager.default.fileExists(atPath: assetPath) {
-            try? FileManager.default.removeItem(atPath: assetPath)
-        }
-        assetWriter = try? AVAssetWriter(outputURL: assetPath.fileUrl, fileType: .mov)
-        
-        let writerOutputSettings = [
-            AVVideoCodecKey: AVVideoCodecType.h264,
-            AVVideoWidthKey: UIScreen.main.bounds.width,
-            AVVideoHeightKey: UIScreen.main.bounds.height,
-        ] as [String : Any]
-        let videoInput = AVAssetWriterInput(mediaType: .video, outputSettings: writerOutputSettings)
-        videoInput.expectsMediaDataInRealTime = true
-        
-        if assetWriter?.canAdd(videoInput) ?? false {
-            assetWriter?.add(videoInput)
-        }
-        self.videoInput = videoInput
-        
-        if let format = CMSampleBufferGetFormatDescription(buffer), let stream = CMAudioFormatDescriptionGetStreamBasicDescription(format) {
-            let audioOutputSettings = [
-                AVFormatIDKey : kAudioFormatMPEG4AAC,
-                AVNumberOfChannelsKey : stream.pointee.mChannelsPerFrame,
-                AVSampleRateKey : stream.pointee.mSampleRate,
-                AVEncoderBitRateKey : 64000
-            ] as [String : Any]
-            let audioInput = AVAssetWriterInput(mediaType: .audio, outputSettings: audioOutputSettings)
-            audioInput.expectsMediaDataInRealTime = true
-            
-            if assetWriter?.canAdd(audioInput) ?? false {
-                assetWriter?.add(audioInput)
-            }
-            self.audioInput = audioInput
         }
     }
 }

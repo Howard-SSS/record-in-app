@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		393F41632A00D58A009C6A04 /* TableViewNoteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F41622A00D58A009C6A04 /* TableViewNoteCell.swift */; };
 		393F41652A00FE26009C6A04 /* MoreExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F41642A00FE26009C6A04 /* MoreExtension.swift */; };
+		393F41672A023494009C6A04 /* BufferWriterTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F41662A023494009C6A04 /* BufferWriterTool.swift */; };
 		39AE0E532A0015520099366E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AE0E522A0015520099366E /* AppDelegate.swift */; };
 		39AE0E552A0015520099366E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AE0E542A0015520099366E /* SceneDelegate.swift */; };
 		39AE0E572A0015520099366E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AE0E562A0015520099366E /* ViewController.swift */; };
@@ -20,6 +21,7 @@
 /* Begin PBXFileReference section */
 		393F41622A00D58A009C6A04 /* TableViewNoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewNoteCell.swift; sourceTree = "<group>"; };
 		393F41642A00FE26009C6A04 /* MoreExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreExtension.swift; sourceTree = "<group>"; };
+		393F41662A023494009C6A04 /* BufferWriterTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferWriterTool.swift; sourceTree = "<group>"; };
 		39AE0E4F2A0015520099366E /* RecordReport.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecordReport.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		39AE0E522A0015520099366E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		39AE0E542A0015520099366E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 				39AE0E5D2A0015530099366E /* LaunchScreen.storyboard */,
 				39AE0E602A0015530099366E /* Info.plist */,
 				393F41622A00D58A009C6A04 /* TableViewNoteCell.swift */,
+				393F41662A023494009C6A04 /* BufferWriterTool.swift */,
 			);
 			path = RecordReport;
 			sourceTree = "<group>";
@@ -148,6 +151,7 @@
 				39AE0E532A0015520099366E /* AppDelegate.swift in Sources */,
 				393F41652A00FE26009C6A04 /* MoreExtension.swift in Sources */,
 				393F41632A00D58A009C6A04 /* TableViewNoteCell.swift in Sources */,
+				393F41672A023494009C6A04 /* BufferWriterTool.swift in Sources */,
 				39AE0E552A0015520099366E /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -298,6 +302,7 @@
 				DEVELOPMENT_TEAM = C6TTF7VT5L;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RecordReport/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "需要权限将视频保存到相册";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -328,6 +333,7 @@
 				DEVELOPMENT_TEAM = C6TTF7VT5L;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RecordReport/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "需要权限将视频保存到相册";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
